@@ -1,7 +1,23 @@
 import requestLogin from '@utils/httpClient';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import useModal from '@hooks/useModal';
+import { useRouter } from 'next/router';
+import { User } from '../../types';
 
 function Login() {
+  const router = useRouter();
+  const { showModal } = useModal();
+  const { mutate } = useMutation((user: User) => requestLogin(user), {
+    onSuccess({ data }) {
+      sessionStorage.setItem('token', data.accessToken);
+      router.push('/');
+    },
+    onError() {
+      showModal('에러가 발생하였습니다.');
+    },
+  });
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
@@ -16,7 +32,14 @@ function Login() {
   };
 
   const handleClick = () => {
-    requestLogin(email, password).then((res) => console.log(res));
+    if (!email) {
+      return showModal('이메일을 입력해주세요.');
+    }
+
+    if (!password) {
+      return showModal('비밀번호를 입력해주세요.');
+    }
+    mutate({ email, password });
   };
 
   return (

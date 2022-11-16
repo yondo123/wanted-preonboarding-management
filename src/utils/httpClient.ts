@@ -1,16 +1,17 @@
 import axios from 'axios';
+import { User } from '../types';
 
 const instance = axios.create({
   baseURL: 'http://localhost:4000/',
 });
 
-const requestLogin = (email: string, password: string) =>
+const requestLogin = (user: User) =>
   instance({
     url: '/login',
     method: 'POST',
     data: {
-      email,
-      password,
+      email: user.email,
+      password: user.password,
     },
   });
 
