@@ -8,6 +8,7 @@ module.exports = {
         tertiary: '#f5f6fa',
         font: '#2f3640',
         fontSub: '#dfe4ea',
+        hover: '#64748b',
       },
     },
   },
