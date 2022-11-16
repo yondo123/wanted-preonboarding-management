@@ -4,11 +4,15 @@ module.exports = {
     extend: {
       colors: {
         primary: '#192a56',
-        secondary: '#dcdde1',
+        secondary: '#f5f6fa',
         tertiary: '#f5f6fa',
         font: '#2f3640',
         fontSub: '#dfe4ea',
         hover: '#64748b',
+      },
+      spacing: {
+        128: '32rem',
+        256: '64rem',
       },
     },
   },
