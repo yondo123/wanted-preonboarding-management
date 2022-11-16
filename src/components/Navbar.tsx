@@ -6,7 +6,7 @@ import iconSet from '../styles/selection.json';
 
 function Navbar() {
   return (
-    <nav className="text-lg text-fontSub mt-5">
+    <nav className="text-base text-fontSub mt-5">
       <ul>
         <NavBarLi>
           <Icon iconSet={iconSet} size={24} icon="bank" />

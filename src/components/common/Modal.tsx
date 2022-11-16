@@ -13,12 +13,12 @@ function Modal() {
       {displayModal.show ? (
         <ModalWrap>
           <div className="bg-opacity-60 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0">
-            <div className="bg-white px-16 py-14 rounded-md text-center">
+            <div className="bg-white px-16 py-10 rounded-md text-center">
               <h1 className="text-lg mb-4 font-bold text-font">{displayModal.message}</h1>
               <button
                 onClick={handleClick}
                 type="button"
-                className="bg-primary hover:bg-hover px-7 py-2 ml-2 rounded-md text-md text-white font-semibold">
+                className="bg-primary hover:bg-hover px-7 py-2 ml-2 mt-7 rounded-md text-md text-white font-semibold">
                 Ok
               </button>
             </div>
