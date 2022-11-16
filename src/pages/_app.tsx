@@ -3,18 +3,28 @@ import GlobalStyle from '@styles/GlobalStyles';
 import '@styles/globals.css';
 import Layout from '@components/Layout';
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { RecoilRoot } from 'recoil';
+import Modal from '@components/common/Modal';
 import { ExcludeLocation } from '../types';
 
 function App({ Component, pageProps, ...appProps }: AppProps) {
-  if ([`${ExcludeLocation.Login}`, `${ExcludeLocation.NOTFOUND}`].includes(appProps.router.pathname))
-    return <Component {...pageProps} />;
+  const queryClient = new QueryClient();
+
   return (
-    <div>
-      <GlobalStyle />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <GlobalStyle />
+        <Modal />
+        {[`${ExcludeLocation.Login}`, `${ExcludeLocation.NOTFOUND}`].includes(appProps.router.pathname) ? (
+          <Component {...pageProps} />
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 }
 export default App;
