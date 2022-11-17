@@ -9,7 +9,7 @@ function Layout({ children }: { children: ReactNode }) {
       <Sidebar />
       <div className="bg-secondary ml-60">
         <Header />
-        <div className="px-6 py-4 h-256">{children}</div>
+        <div className="p-4">{children}</div>
         <Footer />
       </div>
     </div>
