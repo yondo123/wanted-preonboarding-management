@@ -1,4 +1,4 @@
-import requestLogin from '@utils/httpClient';
+import { requestLogin } from '@utils/httpClient';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import useModal from '@hooks/useModal';
@@ -11,7 +11,7 @@ function Login() {
   const { mutate } = useMutation((user: User) => requestLogin(user), {
     onSuccess({ data }) {
       sessionStorage.setItem('token', data.accessToken);
-      router.push('/');
+      router.replace('/');
     },
     onError() {
       showModal('에러가 발생하였습니다.');
