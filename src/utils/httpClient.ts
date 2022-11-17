@@ -1,5 +1,6 @@
 import axios from 'axios';
-import { User } from '../types';
+import { LIMIT } from 'src/types/constants';
+import { Search, User } from '../types';
 
 const instance = axios.create({
   baseURL: 'http://localhost:4000/',
@@ -15,4 +16,18 @@ const requestLogin = (user: User) =>
     },
   });
 
-export default requestLogin;
+const requestAccounts = () =>
+  instance({
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+    },
+    url: '/accounts',
+    method: 'GET',
+    params: {
+      _expand: 'user',
+      _page: '1',
+      _limit: LIMIT,
+    },
+  });
+
+export { requestLogin, requestAccounts };
