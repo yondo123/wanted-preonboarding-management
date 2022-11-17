@@ -16,7 +16,7 @@ const requestLogin = (user: User) =>
     },
   });
 
-const requestAccounts = () =>
+const requestAccounts = (currentPage: number) =>
   instance({
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem('token')}`,
@@ -25,7 +25,7 @@ const requestAccounts = () =>
     method: 'GET',
     params: {
       _expand: 'user',
-      _page: '1',
+      _page: currentPage,
       _limit: LIMIT,
     },
   });
