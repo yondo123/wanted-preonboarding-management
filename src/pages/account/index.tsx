@@ -1,8 +1,9 @@
 import ListHeader from '@components/common/ListHeader';
+import type { QueryFunctionContext } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { requestAccounts } from '@utils/httpClient';
-import { useRecoilState } from 'recoil';
-import { listColumnState } from '@recoil/index';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { listColumnState, pageState, pageTotalLength } from '@recoil/index';
 import { useRouter } from 'next/router';
 import { AccountType } from 'src/types';
 import Pagination from '@components/common/Pagination';
@@ -12,13 +13,16 @@ import { getCurreny } from '../../utils';
 function Account() {
   const router = useRouter();
   const [, setListColumn] = useRecoilState(listColumnState);
+  const [, setTotalLength] = useRecoilState(pageTotalLength);
+  const currentPage = useRecoilValue(pageState);
 
-  const getAccounts = async () => {
-    const { data } = await requestAccounts();
+  const getAccounts = async ({ queryKey }: QueryFunctionContext<[string, number | null | undefined]>) => {
+    const { data, headers }: any = await requestAccounts(currentPage);
+    setTotalLength(Number(headers['x-total-count']));
     return data;
   };
 
-  const { data } = useQuery(['accounts'], getAccounts, {
+  const { data } = useQuery(['accounts', currentPage], getAccounts, {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
     onSuccess() {
@@ -32,7 +36,7 @@ function Account() {
   return (
     <section className="py-1 w-full">
       <div className="w-full  mb-12 xl:mb-0">
-        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded ">
+        <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded min-h-[1000px]">
           <div className="rounded-t mb-0 px-4 py-3 border-0">
             <div className="flex flex-wrap items-center">
               <div className="relative w-full px-4 max-w-full flex-grow flex-1">
@@ -61,7 +65,7 @@ function Account() {
               <ListHeader />
               <tbody>
                 {data?.map((item: AccountType) => (
-                  <tr key={item.id}>
+                  <tr key={item.uuid}>
                     <th className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-left text-font">
                       {item.user.name}
                     </th>
