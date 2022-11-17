@@ -1,8 +1,8 @@
+import React from 'react';
 import type { AppProps } from 'next/app';
 import GlobalStyle from '@styles/GlobalStyles';
 import '@styles/globals.css';
 import Layout from '@components/Layout';
-import React from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RecoilRoot } from 'recoil';
 import Modal from '@components/common/Modal';
