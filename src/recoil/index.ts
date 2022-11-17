@@ -15,3 +15,8 @@ export const pageState = atom({
   key: 'pageState',
   default: 1,
 });
+
+export const pageTotalLength = atom({
+  key: 'pageTotalLength',
+  default: 0,
+});
