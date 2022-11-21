@@ -81,3 +81,34 @@ export const ACCOUNT_HEADER = [
     name: '계좌 개설일',
   },
 ];
+
+export const USER_HEADER = [
+  {
+    id: 'name',
+    name: '고객명',
+  },
+  {
+    id: 'gender_origin',
+    name: '성별',
+  },
+  {
+    id: 'birth_date',
+    name: '생년월일',
+  },
+  {
+    id: 'phone_number',
+    name: '연락처',
+  },
+  {
+    id: 'last_login',
+    name: '로그인',
+  },
+  {
+    id: 'created_at',
+    name: '가입일',
+  },
+  {
+    id: 'is_active',
+    name: '활성화',
+  },
+];
