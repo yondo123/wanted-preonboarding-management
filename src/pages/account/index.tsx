@@ -3,10 +3,12 @@ import type { QueryFunctionContext } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { requestAccounts } from '@utils/httpClient';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { listColumnState, pageState, pageTotalLength } from '@recoil/index';
+import { accountFilterState, listColumnState, pageState, pageTotalLength } from '@recoil/index';
 import { useRouter } from 'next/router';
 import { AccountType } from 'src/types';
 import Pagination from '@components/common/Pagination';
+import AccountFilter from '@components/filter/AccountFilter';
+import { useEffect } from 'react';
 import { ACCOUNT_HEADER, ACCOUNT_STATUS, BROKER } from '../../types/constants';
 import { getCurreny } from '../../utils';
 
@@ -15,16 +17,18 @@ function Account() {
   const [, setListColumn] = useRecoilState(listColumnState);
   const [, setTotalLength] = useRecoilState(pageTotalLength);
   const currentPage = useRecoilValue(pageState);
+  const accountFilter = useRecoilValue(accountFilterState);
 
-  const getAccounts = async ({ queryKey }: QueryFunctionContext<[string, number | null | undefined]>) => {
-    const { data, headers }: any = await requestAccounts(currentPage);
+  const getAccounts = async ({ queryKey }: QueryFunctionContext<[string, number | undefined]>) => {
+    const { data, headers }: any = await requestAccounts({ currentPage: queryKey[1], ...accountFilter });
     setTotalLength(Number(headers['x-total-count']));
     return data;
   };
 
-  const { data } = useQuery(['accounts', currentPage], getAccounts, {
+  const { data, isLoading, refetch } = useQuery(['accounts', currentPage], getAccounts, {
     refetchOnWindowFocus: false,
     keepPreviousData: true,
+    retry: 0,
     onSuccess() {
       setListColumn(ACCOUNT_HEADER);
     },
@@ -33,33 +37,19 @@ function Account() {
     },
   });
 
+  useEffect(() => {
+    refetch();
+  }, [accountFilter]);
+
+  if (isLoading) {
+    return <div>로딩 중</div>;
+  }
+
   return (
     <section className="py-1 w-full">
       <div className="w-full  mb-12 xl:mb-0">
         <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded min-h-[1000px]">
-          <div className="rounded-t mb-0 px-4 py-3 border-0">
-            <div className="flex flex-wrap items-center">
-              <div className="relative w-full px-4 max-w-full flex-grow flex-1">
-                <input
-                  className="border-solid border border-primary h-7 px-5 pr-16 rounded-lg text-sm font-bold "
-                  type="text"
-                  name="search"
-                  placeholder="Search"
-                />
-                <button type="submit" className="ml-4 py-1 px-2 bg-primary text-white text-sm rounded-md">
-                  검 색
-                </button>
-              </div>
-              <div className="relative w-full px-4 max-w-full flex-grow flex-1 text-right">
-                <button
-                  className="bg-primary hover:bg-hover text-white  text-xs font-bold uppercase px-3 py-1 rounded outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  type="button">
-                  전체보기
-                </button>
-              </div>
-            </div>
-          </div>
-
+          <AccountFilter />
           <div className="block w-full overflow-x-auto">
             <table className="items-center bg-transparent w-full border-collapse ">
               <ListHeader />
